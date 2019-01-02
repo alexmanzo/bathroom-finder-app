@@ -20,6 +20,10 @@ export default {
 <style scoped lang="scss">
 @import 'main.scss';
 
+ul {
+  padding-inline-start: 0;
+}
+
 li {
   list-style: none;
   color: $orange;
@@ -27,6 +31,15 @@ li {
   font-size: 20px;
 }
 
-@media screen and (max-width: $small) {
+@media screen and (max-width: $large) {
+  li {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: $medium) {
+  li {
+    font-size: 18px;
+  }
 }
 </style>

@@ -24,6 +24,7 @@ export default {
 header {
   display: flex;
   padding: 25px;
+  justify-content: center;
 }
 
 i {
@@ -40,10 +41,25 @@ h1 {
 
 nav {
   align-self: center;
-  margin-left: auto;
+  padding-left: 65px;
 }
 
-@media screen and (max-width: $small) {
+@media screen and (max-width: $large) {
+  nav {
+    padding-left: 25px;
+  }
+
+  h1 {
+    font-size: 40px;
+    -webkit-margin-before: 0.75em;
+  }
+
+  i {
+    font-size: 110px;
+  }
+}
+
+@media screen and (max-width: $medium) {
   header {
     display: block;
     text-align: center;
@@ -52,14 +68,12 @@ nav {
     margin: 0 auto;
   }
 
-  i {
-    font-size: 100px;
-  }
-
   h1 {
     padding-left: 0;
-    -webkit-margin-before: 0.5em;
-    font-size: 32px;
+  }
+
+  nav {
+    padding-left: 0;
   }
 }
 </style>

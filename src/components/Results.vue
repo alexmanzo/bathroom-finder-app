@@ -1,36 +1,44 @@
 <template>
   <div id="results">
-    <h1>Results</h1>
-    <div v-for="location in results" :key="location.id">
-        <p>{{ location.location }}</p>
-        <p>{{ location.address }}</p>
-        <p>{{ location.type }}</p>
+    <h1 v-if="results.length === 0">Loading...</h1>
+    <div v-else v-for="location in results" :key="location.id">
+      <h2>{{ location.location }}</h2>
+      <p>{{ location.address }}</p>
+      <p>{{ location.type }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-const username = process.env.VUE_APP_GEONAME_USERNAME
+
+const geocoder = new google.maps.Geocoder()
 const baseApiUrl = 'http://localhost:3000/api'
 export default {
   components: {},
   data() {
     return {
-      zipcode: 27701,
       results: [],
     }
   },
   props: {},
   methods: {
-    async getZipCodesFromUserLocation(location) {
-      const lat = location.coords.latitude
-      const long = location.coords.longitude
-      let zipCodeData = await axios.get(
-        `http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${long}&username=${username}`
-      )
-      this.zipcode = zipCodeData.data.postalCodes[0].postalCode
-      this.getBathroomLocations(zipCodeData.data.postalCodes[0].postalCode)
+    getZipFromUserLocation() {
+      navigator.geolocation.getCurrentPosition(location => {
+        const latLng = new google.maps.LatLng(
+          location.coords.latitude,
+          location.coords.longitude
+        )
+
+        geocoder.geocode({ location: latLng }, (results, status) => {
+          if (status === 'OK') {
+            const address = results[0].address_components
+            const zipcode = address[address.length - 2].long_name
+            this.zipcode = zipcode
+            this.getBathroomLocations(zipcode)
+          }
+        })
+      })
     },
     async getBathroomLocations(zip) {
       let resultData = await axios.get(`${baseApiUrl}/locations/zip/${zip}`)
@@ -38,9 +46,7 @@ export default {
     },
   },
   created() {
-    navigator.geolocation.getCurrentPosition(location => {
-      this.getZipCodesFromUserLocation(location)
-    })
+    this.getZipFromUserLocation()
   },
 }
 </script>
