@@ -2,8 +2,8 @@
   <div id="results">
     <h1 v-if="results.length === 0">Loading...</h1>
     <div v-else v-for="location in results" :key="location.id">
-      <h2>{{ location.location }}</h2>
-      <p>{{ location.address }}</p>
+      <h2>{{ location.name }}</h2>
+      <p>{{ location.street }} {{ location.city }}, {{ location.state }}</p>
       <p>{{ location.type }}</p>
     </div>
   </div>
