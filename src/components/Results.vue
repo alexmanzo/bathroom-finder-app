@@ -12,8 +12,6 @@
 <script>
 import axios from 'axios'
 
-const geocoder = new google.maps.Geocoder()
-const baseApiUrl = 'http://localhost:3000/api'
 export default {
   components: {},
   data() {
@@ -23,30 +21,25 @@ export default {
   },
   props: {},
   methods: {
-    getZipFromUserLocation() {
-      navigator.geolocation.getCurrentPosition(location => {
-        const latLng = new google.maps.LatLng(
-          location.coords.latitude,
-          location.coords.longitude
-        )
-
-        geocoder.geocode({ location: latLng }, (results, status) => {
-          if (status === 'OK') {
-            const address = results[0].address_components
-            const zipcode = address[address.length - 2].long_name
-            this.zipcode = zipcode
-            this.getBathroomLocations(zipcode)
-          }
-        })
+    async getBathroomsFromUserLocation() {
+      await navigator.geolocation.getCurrentPosition(location => {
+        return axios
+          .get(
+            `${process.env.VUE_APP_API_BASE_URL}/locations/geography?lat=${
+              location.coords.latitude
+            }&lng=${location.coords.longitude}`
+          )
+          .then(results => {
+            this.results = results.data
+          })
       })
     },
-    async getBathroomLocations(zip) {
-      let resultData = await axios.get(`${baseApiUrl}/locations/zip/${zip}`)
-      this.results = resultData.data
-    },
   },
-  created() {
-    this.getZipFromUserLocation()
+  mounted() {
+    this.getBathroomsFromUserLocation()
+    this.$root.$on('searchSubmitted', bathroomLocationData => {
+      this.results = bathroomLocationData.data
+    })
   },
 }
 </script>

@@ -22,23 +22,20 @@ export default {
         this.$refs.input
       )
       this.input = autocompleteSearchBox
-      autocompleteSearchBox.setFields(['formatted_address', 'name', 'place_id'])
+      autocompleteSearchBox.setFields(['place_id'])
       autocompleteSearchBox.addListener('place_changed', () => {
         let place = autocompleteSearchBox.getPlace()
         this.searchValue = place
       })
     },
     async handleSearch() {
-      const fullAddress = this.searchValue.formatted_address
-      let street, city, statezip
-      ;[street, city, statezip] = fullAddress.split(/,\s*/)
-      let zip = statezip.slice(3)
-      console.log(zip)
-      const query = {
-        name: this.searchValue.name,
-        zip: this.searchValue.formatted_address,
-      }
-      //let bathroomLocationData = await axios.get(`${baseApiUrl}/locations/`)
+      const bathroomLocationData = await axios.get(
+        `${process.env.VUE_APP_API_BASE_URL}/locations?googlePlaceId=${
+          this.searchValue.place_id
+        }`
+      )
+      console.log(this.searchValue.place_id)
+      this.$root.$emit('searchSubmitted', bathroomLocationData)
     },
   },
   mounted() {
