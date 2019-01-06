@@ -25,7 +25,7 @@ export default {
       await navigator.geolocation.getCurrentPosition(location => {
         return axios
           .get(
-            `${process.env.VUE_APP_API_BASE_URL}/locations/geography?lat=${
+            `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${
               location.coords.latitude
             }&lng=${location.coords.longitude}`
           )
