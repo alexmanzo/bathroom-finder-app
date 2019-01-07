@@ -100,10 +100,22 @@ export default {
         .then(() => {
           this.message =
             'Location added succesfully! Thanks for your contribution.'
+          ;(this.autocomplete = ''),
+            (this.name = ''),
+            (this.street_number = ''),
+            (this.route = ''),
+            (this.city = ''),
+            (this.state = ''),
+            (this.zip = null),
+            (this.locationType = []),
+            (this.googlePlaceId = []),
+            (this.loc = {
+              type: 'Point',
+              coordinates: [],
+            })
         })
         .catch(err => {
-          this.message = 'Uh oh, something went wrong!'
-          console.log(err)
+          this.message = `Uh oh, something went wrong! ${err}`
         })
     },
     // async handleSearch() {
