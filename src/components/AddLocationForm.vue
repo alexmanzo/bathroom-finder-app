@@ -1,20 +1,26 @@
 <template>
-  <div id="add-new-location">
-    <form id="autocomplete-form">
+  <div id="add-new-location" @submit.prevent="searchLocation">
+    <form id="autocomplete-form" :class="showForm">
       <label for="userInput">Enter the location you'd like to add:</label>
       <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
+      <button type="submit">Search</button>
     </form>
-    <h2>Does this look right?</h2>
-    <div id="place-preview">
-      <p>
-        <strong>{{ name }}</strong>
-      </p>
-      <p>{{ street_number }} {{ route }}</p>
-      <p>{{ city }}, {{state}} {{zip}}</p>
-      <p>{{ loc.coordinates[0]}}, {{ loc.coordinates[1]}}</p>
-      <p v-for="type in locationType" :key="type">{{type}}</p>
-      <button @click.prevent="postLocation">Submit Location</button>
+    <div id="message" :class="showMessage">
       <p>{{message}}</p>
+      <button @click.prevent="resetForm">Add another?</button>
+    </div>
+    <div :class="showPreview" id="preview">
+      <h2>Does this look right?</h2>
+      <div id="place-preview">
+        <p>
+          <strong>{{ name }}</strong>
+        </p>
+        <p>{{ street_number }} {{ route }}</p>
+        <p>{{ city }}, {{state}} {{zip}}</p>
+        <p>{{ loc.coordinates[0]}}, {{ loc.coordinates[1]}}</p>
+        <p v-for="type in locationType" :key="type">{{type}}</p>
+        <button @click.prevent="postLocation">Submit Location</button>
+      </div>
     </div>
   </div>
 </template>
@@ -33,13 +39,16 @@ export default {
       state: '',
       zip: null,
       locationType: [],
-      googlePlaceId: [],
+      googlePlaceId: '',
       loc: {
         type: 'Point',
         coordinates: [],
       },
       states,
       message: '',
+      previewVisible: false,
+      formVisible: true,
+      messageVisible: false,
     }
   },
   methods: {
@@ -62,7 +71,7 @@ export default {
         this.name = place.name
         this.loc.coordinates.push(place.geometry.location.lat())
         this.loc.coordinates.push(place.geometry.location.lng())
-        this.googlePlaceId.push(place.place_id)
+        this.googlePlaceId = place.place_id
         this.locationType = place.types
         place.address_components.forEach((component, index) => {
           switch (place.address_components[index].types[0]) {
@@ -84,6 +93,10 @@ export default {
           }
         })
       })
+    },
+    searchLocation() {
+      this.previewVisible = true
+      this.autocomplete = ''
     },
     postLocation() {
       axios
@@ -108,7 +121,7 @@ export default {
             (this.state = ''),
             (this.zip = null),
             (this.locationType = []),
-            (this.googlePlaceId = []),
+            (this.googlePlaceId = ''),
             (this.loc = {
               type: 'Point',
               coordinates: [],
@@ -117,16 +130,48 @@ export default {
         .catch(err => {
           this.message = `Uh oh, something went wrong! ${err}`
         })
+      this.previewVisible = false
+      this.formVisible = false
+      this.messageVisible = true
     },
-    // async handleSearch() {
-    //   const bathroomLocationData = await axios.get(
-    //     `https://gentle-lake-28954.herokuapp.com/api/locations?googlePlaceId=${
-    //       this.searchValue.place_id
-    //     }`
-    //   )
-    //   this.$root.$emit('searchSubmitted', bathroomLocationData)
-    //   this.searchTerm = ''
-    // },
+    resetForm() {
+      ;(this.name = ''),
+        (this.street_number = ''),
+        (this.route = ''),
+        (this.city = ''),
+        (this.state = ''),
+        (this.zip = null),
+        (this.locationType = []),
+        (this.googlePlaceId = ''),
+        (this.loc = {
+          type: 'Point',
+          coordinates: [],
+        }),
+        (this.message = ''),
+        (this.previewVisible = false),
+        (this.formVisible = true),
+        (this.messageVisible = false)
+    },
+  },
+  computed: {
+    showPreview() {
+      return {
+        visible: this.previewVisible === true,
+        hidden: this.previewVisible === false,
+      }
+    },
+    showForm() {
+      return {
+        visble: this.formVisible === true,
+        hidden: this.formVisible === false,
+      }
+    },
+    showMessage() {
+      return {
+        visible: this.messageVisible === true,
+        hidden: this.messageVisible === false,
+      }
+    },
   },
   mounted() {
     this.generateAutocomplete()
@@ -136,4 +181,16 @@ export default {
 
 <style lang="scss" scoped>
 @import 'main.scss';
+
+#preview.hidden,
+#autocomplete-form.hidden,
+#message.hidden {
+  display: none;
+}
+
+#preview.visible,
+#autocomplete-form.visible,
+#message.visible {
+  display: initial;
+}
 </style>
