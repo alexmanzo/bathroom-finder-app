@@ -22,16 +22,17 @@ export default {
         this.$refs.input
       )
       this.input = autocompleteSearchBox
-      autocompleteSearchBox.setFields(['place_id', 'vicinity'])
+      autocompleteSearchBox.setFields(['place_id', 'vicinity', 'name'])
       autocompleteSearchBox.addListener('place_changed', () => {
         let place = autocompleteSearchBox.getPlace()
         this.searchValue = place
       })
     },
     async handleSearch() {
+      console.log(this.searchValue.name)
       const bathroomLocationData = await axios.get(
-        `https://gentle-lake-28954.herokuapp.com/api/locations?googlePlaceId=${
-          this.searchValue.place_id
+        `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
+          this.searchValue.name
         }`
       )
       this.$root.$emit('searchSubmitted', bathroomLocationData)
@@ -39,6 +40,9 @@ export default {
     },
   },
   mounted() {
+    this.generateAutocomplete()
+  },
+  updated() {
     this.generateAutocomplete()
   },
 }

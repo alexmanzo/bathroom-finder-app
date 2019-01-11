@@ -35,11 +35,13 @@ export default {
       })
     },
   },
-  mounted() {
-    this.getBathroomsFromUserLocation()
+  created() {
     this.$root.$on('searchSubmitted', bathroomLocationData => {
       this.results = bathroomLocationData.data
     })
+  },
+  mounted() {
+    this.getBathroomsFromUserLocation()
   },
 }
 </script>

@@ -113,26 +113,13 @@ export default {
         .then(() => {
           this.message =
             'Location added succesfully! Thanks for your contribution.'
-          ;(this.autocomplete = ''),
-            (this.name = ''),
-            (this.street_number = ''),
-            (this.route = ''),
-            (this.city = ''),
-            (this.state = ''),
-            (this.zip = null),
-            (this.locationType = []),
-            (this.googlePlaceId = ''),
-            (this.loc = {
-              type: 'Point',
-              coordinates: [],
-            })
+          this.previewVisible = false
+          this.formVisible = false
+          this.messageVisible = true
         })
         .catch(err => {
           this.message = `Uh oh, something went wrong! ${err}`
         })
-      this.previewVisible = false
-      this.formVisible = false
-      this.messageVisible = true
     },
     resetForm() {
       ;(this.name = ''),
