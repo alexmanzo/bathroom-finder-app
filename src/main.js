@@ -8,7 +8,6 @@ import Header from '@/components/Header.vue'
 Vue.component('app-header', Header)
 //Vue.component('app-footer', footer)
 
-
 // ----- Dependency Config ----- //
 dotenv.config()
 

@@ -69,8 +69,7 @@ export default {
         let place = autocompleteSearchBox.getPlace()
 
         this.name = place.name
-        this.loc.coordinates.push(place.geometry.location.lat())
-        this.loc.coordinates.push(place.geometry.location.lng())
+        this.loc.coordinates = [place.geometry.location.lng(), place.geometry.location.lat()]
         this.googlePlaceId = place.place_id
         this.locationType = place.types
         place.address_components.forEach((component, index) => {

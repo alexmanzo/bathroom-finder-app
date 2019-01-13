@@ -29,7 +29,6 @@ export default {
       })
     },
     async handleSearch() {
-      console.log(this.searchValue.name)
       const bathroomLocationData = await axios.get(
         `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
           this.searchValue.name
