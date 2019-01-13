@@ -1,7 +1,11 @@
 <template>
   <header>
-    <i class="fas fa-transgender-alt"></i>
-    <h1>All-Gender Bathroom Finder</h1>
+    <router-link :to="{ name: 'home' }">
+      <i class="fas fa-transgender-alt"></i>
+     </router-link>
+     <router-link :to="{ name: 'home' }">
+      <h1>All-Gender Bathroom Finder</h1>
+   </router-link>
     <app-nav></app-nav>
   </header>
 </template>
@@ -37,6 +41,11 @@ h1 {
   font-size: 48px;
   -webkit-margin-before: 1em;
   padding-left: 5px;
+}
+
+a {
+  text-decoration: none;
+  color: $blue;
 }
 
 nav {

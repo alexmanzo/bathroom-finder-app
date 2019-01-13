@@ -1,8 +1,6 @@
 <template>
   <nav>
-    <ul>
-      <li v-for="item in navItems" :key="item">{{ item }}</li>
-    </ul>
+    <router-link :to="{ name: 'addNew' }"><button>+ Add New</button></router-link>
   </nav>
 </template>
 
@@ -20,26 +18,26 @@ export default {
 <style scoped lang="scss">
 @import 'main.scss';
 
-ul {
-  padding-inline-start: 0;
+button {
+  font-size: 16px;
+  padding: 8px 14px;
+  background-color: $orange;
+  color: white;
+  font-weight: bold;
+  border-radius: 25px;
+  border: 1px solid white;
 }
 
-li {
-  list-style: none;
+button:hover {
+  background-color: transparent;
   color: $orange;
-  font-weight: 500;
-  font-size: 20px;
+  border: 1px solid $orange;
+  cursor: pointer;
 }
 
-@media screen and (max-width: $large) {
-  li {
-    font-size: 16px;
-  }
-}
-
-@media screen and (max-width: $medium) {
-  li {
-    font-size: 18px;
-  }
+button:focus {
+  background-color: transparent;
+  color: $orange;
+  border: 1px solid $orange;
 }
 </style>

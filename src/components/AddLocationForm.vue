@@ -1,5 +1,6 @@
 <template>
   <div id="add-new-location" @submit.prevent="searchLocation">
+    <h2>First, let's search for the location you'd like to add:</h2>
     <form id="autocomplete-form" :class="showForm">
       <label for="userInput">Enter the location you'd like to add:</label>
       <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
@@ -17,10 +18,8 @@
         </p>
         <p>{{ street_number }} {{ route }}</p>
         <p>{{ city }}, {{state}} {{zip}}</p>
-        <p>{{ loc.coordinates[0]}}, {{ loc.coordinates[1]}}</p>
-        <p v-for="type in locationType" :key="type">{{type}}</p>
-        <button @click.prevent="postLocation">Submit Location</button>
       </div>
+      <button @click.prevent="postLocation">Submit Location</button>
     </div>
   </div>
 </template>
@@ -69,7 +68,10 @@ export default {
         let place = autocompleteSearchBox.getPlace()
 
         this.name = place.name
-        this.loc.coordinates = [place.geometry.location.lng(), place.geometry.location.lat()]
+        this.loc.coordinates = [
+          place.geometry.location.lng(),
+          place.geometry.location.lat(),
+        ]
         this.googlePlaceId = place.place_id
         this.locationType = place.types
         place.address_components.forEach((component, index) => {
@@ -178,5 +180,91 @@ export default {
 #autocomplete-form.visible,
 #message.visible {
   display: initial;
+}
+
+#add-new-location {
+  position: relative;
+  margin: 3% 8% 2% 0;
+  text-align: center;
+}
+
+input {
+  font-size: 20px;
+  color: $font-color;
+  padding: 10px 20px;
+  width: 600px;
+  border-radius: 25px 0 0 25px;
+  border: 1px solid $orange;
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Label */
+label {
+  font-size: 14px;
+  color: $font-color;
+  position: absolute;
+  top: -20px;
+  padding-left: 25px;
+}
+
+/* Button */
+#preview button {
+  border-radius: 25px;
+}
+
+button {
+  font-size: 20px;
+  position: absolute;
+  border-radius: 0 25px 25px 0;
+  padding: 10px 20px;
+  background-color: $orange;
+  color: white;
+  border: 1px solid $orange;
+}
+
+button:focus {
+  outline: none;
+  background-color: transparent;
+  border: 1px solid $orange;
+  color: $orange;
+}
+
+button:hover {
+  background-color: transparent;
+  border: 1px solid $orange;
+  color: $orange;
+}
+
+button:active {
+  background-color: white;
+  color: $orange;
+}
+
+/* Media Queries */
+@media only screen and (max-width: $large) {
+  input {
+    width: 500px;
+  }
+}
+
+@media only screen and (max-width: $medium) {
+  input {
+    width: 400px;
+  }
+}
+
+@media only screen and (max-width: $small) {
+  #search-form {
+    margin-right: 30%;
+  }
+  input {
+    width: 200px;
+  }
+  label {
+    font-size: 12px;
+  }
 }
 </style>
