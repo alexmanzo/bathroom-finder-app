@@ -9,6 +9,7 @@
       placeholder="Durham, NC 27712"
     >
     <button>Search</button>
+    <p>{{ message }}</p>
   </form>
 </template>
 
@@ -20,6 +21,7 @@ export default {
     return {
       searchTerm: '',
       searchValue: {},
+      message: '',
     }
   },
   methods: {
@@ -35,12 +37,24 @@ export default {
       })
     },
     async handleSearch() {
+      if (this.searchTerm == '') {
+        this.message = 'Please enter a valid search term.'
+      }
       const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
         this.searchValue.name
       }`
-      const bathroomLocationData = await axios.get(url)
-      this.$root.$emit('searchSubmitted', bathroomLocationData)
-      this.searchTerm = ''
+      try {
+        const bathroomLocationData = await axios({
+          url,
+          method: 'get',
+          timeout: 5000,
+        })
+        this.$root.$emit('searchSubmitted', bathroomLocationData)
+        this.searchTerm = ''
+      } catch (err) {
+        this.message = 'Sorry, something went wrong. Try another search.'
+        this.$root.$emit('searchError')
+      }
     },
   },
   mounted() {

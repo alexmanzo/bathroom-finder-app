@@ -1,6 +1,6 @@
 <template>
   <div id="results">
-    <h1 v-if="results.length === 0">Loading...</h1>
+    <loading v-if="this.loading"></loading>
     <div v-else v-for="location in results" :key="location.id" class="location-container">
       <div class="location-container--info">
         <h2>{{ location.name }}</h2>
@@ -16,12 +16,16 @@
 
 <script>
 import axios from 'axios'
+import Loading from '@/components/Loading.vue'
 
 export default {
-  components: {},
+  components: {
+    loading: Loading,
+  },
   data() {
     return {
       results: [],
+      loading: false,
     }
   },
   props: {},
@@ -43,6 +47,10 @@ export default {
   created() {
     this.$root.$on('searchSubmitted', bathroomLocationData => {
       this.results = bathroomLocationData.data
+    })
+    this.$root.$on('searchError', () => {
+      this.loading = false
+      this.results = []
     })
   },
   mounted() {

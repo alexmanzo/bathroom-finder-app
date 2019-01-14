@@ -1,10 +1,11 @@
 <template>
   <div id="add-new-location" @submit.prevent="searchLocation">
-    <h2>First, let's search for the location you'd like to add:</h2>
     <form id="autocomplete-form" :class="showForm">
-      <label for="userInput">Enter the location you'd like to add:</label>
-      <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
+      <h2>First, let's search for the location you'd like to add:</h2>
+      <fieldset>
+        <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
       <button type="submit">Search</button>
+      </fieldset> 
     </form>
     <div id="message" :class="showMessage">
       <p>{{message}}</p>
@@ -170,6 +171,10 @@ export default {
 <style lang="scss" scoped>
 @import 'main.scss';
 
+h2 {
+  font-size: 32px;
+}
+
 #preview.hidden,
 #autocomplete-form.hidden,
 #message.hidden {
@@ -179,13 +184,28 @@ export default {
 #preview.visible,
 #autocomplete-form.visible,
 #message.visible {
-  display: initial;
+  display: block;
 }
 
 #add-new-location {
   position: relative;
-  margin: 3% 8% 2% 0;
+  margin: 45px auto;
   text-align: center;
+}
+
+#preview {
+  margin-top: 50px;
+  position: relative;
+}
+
+#autocomplete-form fieldset {
+  margin-right: 70px;
+  border: none;
+}
+
+#preview p,
+#message p {
+  font-size: 22px;
 }
 
 input {
@@ -201,21 +221,18 @@ input:focus {
   outline: none;
 }
 
-/* Label */
-label {
-  font-size: 14px;
-  color: $font-color;
-  position: absolute;
-  top: -20px;
-  padding-left: 25px;
-}
-
 /* Button */
-#preview button {
+#preview button,
+#message.visible button {
   border-radius: 25px;
+  font-size: 20px;
+  padding: 10px 20px;
+  background-color: $orange;
+  color: white;
+  border: 1px solid $orange;
 }
 
-button {
+#autocomplete-form button {
   font-size: 20px;
   position: absolute;
   border-radius: 0 25px 25px 0;
@@ -223,22 +240,30 @@ button {
   background-color: $orange;
   color: white;
   border: 1px solid $orange;
+  margin-right: 65px;
 }
 
-button:focus {
+#preview button:focus,
+#autocomplete-form button:focus,
+#message.visible button:focus {
   outline: none;
   background-color: transparent;
   border: 1px solid $orange;
   color: $orange;
 }
 
-button:hover {
+#autocomplete-form button:hover,
+#preview button:hover,
+#message.visible button:hover {
   background-color: transparent;
   border: 1px solid $orange;
   color: $orange;
+  cursor: pointer;
 }
 
-button:active {
+#autocomplete-form button:active,
+#preview button:active,
+#message.visible button:active {
   background-color: white;
   color: $orange;
 }
