@@ -4,12 +4,12 @@
       <h2>First, let's search for the location you'd like to add:</h2>
       <fieldset>
         <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
-      <button type="submit">Search</button>
-      </fieldset> 
+        <button type="submit">Search</button>
+      </fieldset>
     </form>
     <div id="message" :class="showMessage">
       <p>{{message}}</p>
-      <button @click.prevent="resetForm">Add another?</button>
+      <button @click.prevent="resetForm" :class="showAddAnother">Add another?</button>
     </div>
     <div :class="showPreview" id="preview">
       <h2>Does this look right?</h2>
@@ -97,31 +97,40 @@ export default {
       })
     },
     searchLocation() {
-      this.previewVisible = true
-      this.autocomplete = ''
+      if (this.autocomplete === '') {
+        this.message = `Please enter the location you'd like to add.`
+        this.messageVisible = true
+      } else {
+        this.previewVisible = true
+        this.autocomplete = ''
+      }
     },
-    postLocation() {
-      axios
-        .post('https://gentle-lake-28954.herokuapp.com/api/locations', {
-          name: this.name,
-          street: this.street_number + ' ' + this.route,
-          city: this.city,
-          state: this.state,
-          zip: this.zip,
-          type: this.locationType,
-          googlePlaceId: this.googlePlaceId,
-          loc: this.loc,
-        })
-        .then(() => {
-          this.message =
-            'Location added succesfully! Thanks for your contribution.'
-          this.previewVisible = false
-          this.formVisible = false
-          this.messageVisible = true
-        })
-        .catch(err => {
-          this.message = `Uh oh, something went wrong! ${err}`
-        })
+    async postLocation() {
+      try {
+        await axios.post(
+          'https://gentle-lake-28954.herokuapp.com/api/locations',
+          {
+            name: this.name,
+            street: this.street_number + ' ' + this.route,
+            city: this.city,
+            state: this.state,
+            zip: this.zip,
+            type: this.locationType,
+            googlePlaceId: this.googlePlaceId,
+            loc: this.loc,
+          }
+        )
+        this.message =
+          'Location added succesfully! Thanks for your contribution.'
+        this.previewVisible = false
+        this.formVisible = false
+        this.messageVisible = true
+      } catch (err) {
+        this.message = `Sorry, ${err.response.data.message}.`
+        this.previewVisible = false
+        this.formVisible = true
+        this.messageVisible = true
+      }
     },
     resetForm() {
       ;(this.name = ''),
@@ -161,6 +170,15 @@ export default {
         hidden: this.messageVisible === false,
       }
     },
+    showAddAnother() {
+      return {
+        visible:
+          this.message ===
+          'Location added succesfully! Thanks for your contribution.',
+        hidden: this.message !==
+          'Location added succesfully! Thanks for your contribution.',
+      }
+    },
   },
   mounted() {
     this.generateAutocomplete()
@@ -177,7 +195,8 @@ h2 {
 
 #preview.hidden,
 #autocomplete-form.hidden,
-#message.hidden {
+#message.hidden,
+button.hidden {
   display: none;
 }
 
@@ -223,7 +242,7 @@ input:focus {
 
 /* Button */
 #preview button,
-#message.visible button {
+button.visible  {
   border-radius: 25px;
   font-size: 20px;
   padding: 10px 20px;

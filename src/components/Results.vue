@@ -8,7 +8,7 @@
       </div>
       <div v-if="location.dist" class="location-container--distance">
         <p>Distance</p>
-        <p>{{ (location.dist.calculated / 1098).toFixed(1) }} miles</p>
+        <p>{{ (location.dist.calculated / 1609.344).toFixed(1) }} miles</p>
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@ export default {
   props: {},
   methods: {
     async getBathroomsFromUserLocation() {
+      this.loading = true
       await navigator.geolocation.getCurrentPosition(location => {
         return axios
           .get(
@@ -40,12 +41,18 @@ export default {
           )
           .then(results => {
             this.results = results.data
+            this.loading = false
           })
       })
     },
   },
   created() {
+    this.$root.$on('triggerSearch', () => {
+      this.results = []
+      this.loading = true
+    })
     this.$root.$on('searchSubmitted', bathroomLocationData => {
+      this.loading = false
       this.results = bathroomLocationData.data
     })
     this.$root.$on('searchError', () => {

@@ -1,5 +1,5 @@
 <template>
-  <form id="search-form" @submit.prevent="handleSearch">
+  <form id="search-form" @submit.prevent="triggerSearch">
     <label for="userInput">Enter your search for an affirming space</label>
     <input
       type="text"
@@ -36,6 +36,11 @@ export default {
         this.searchValue = place
       })
     },
+    triggerSearch() {
+      this.message = ''
+      this.$root.$emit('triggerSearch')
+      this.handleSearch()
+    },
     async handleSearch() {
       if (this.searchTerm == '') {
         this.message = 'Please enter a valid search term.'
@@ -47,12 +52,14 @@ export default {
         const bathroomLocationData = await axios({
           url,
           method: 'get',
-          timeout: 5000,
         })
+        if (bathroomLocationData.data.length === 0) {
+          throw 'no results found'
+        }
         this.$root.$emit('searchSubmitted', bathroomLocationData)
         this.searchTerm = ''
       } catch (err) {
-        this.message = 'Sorry, something went wrong. Try another search.'
+        this.message = `Sorry, ${err}. Try another search.`
         this.$root.$emit('searchError')
       }
     },

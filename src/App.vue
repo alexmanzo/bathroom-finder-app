@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  opacity: 0.15;
+  opacity: 0.1;
   position: fixed;
   background-repeat: repeat;
   background-size: 150px;
