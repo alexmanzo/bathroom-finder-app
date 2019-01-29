@@ -1,7 +1,7 @@
 <h1>All-Gender Bathroom Finder</h1>
 
 <h2>Summary</h2>
-<p>This project stems from a drive to fulfill a personal need, and a need for many other non-binary and trans identifying individuals. When on any given day you can be perceived as either male or female, something as simple as going to the bathroom can become a huge safety issue. My spouse and I try to frequent locations that offer gender-netural bathrooms, but it can be hard remembering all of those spaces,</p>
+<p>This project stems from a drive to fulfill a personal need, and a need for many other non-binary and trans identifying individuals. When on any given day you can be perceived as either male or female, something as simple as going to the bathroom can become a huge safety issue. My spouse and I try to frequent locations that offer gender-netural bathrooms, but it can be hard remembering all of those spaces.</p>
 <p>This project seeks to fulfill that need by providing a database of locaitons with all-gender bathrooms that anyone can add to. Its present functionality allows for the following:</p>
 <ul>
   <li>Returns a list of safe bathrooms based on the user's present location. (Note: all locations currently are on the Triangle area of North Carolina.</li>
