@@ -71,4 +71,10 @@ export default {
     transform: scale(1);
   }
 }
+
+@media only screen and (max-width: $small) {
+  .spinner {
+    width: 100%;
+  }
+}
 </style>

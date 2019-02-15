@@ -55,4 +55,14 @@ i {
 .github {
   padding-left: 20px;
 }
+
+@media only screen and (max-width: $small) {
+ footer {
+   padding: 20px 0;
+   display: block;
+ }
+ .github {
+   padding-left: 0;
+ }
+}
 </style>

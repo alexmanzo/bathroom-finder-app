@@ -100,31 +100,54 @@ export default {
       if (this.autocomplete === '') {
         this.message = `Please enter the location you'd like to add.`
         this.messageVisible = true
-      } else {
-        this.previewVisible = true
-        this.autocomplete = ''
+      } else if (
+        !this.name ||
+        !this.street_number ||
+        !this.city ||
+        !this.state ||
+        !this.zip
+      ) {
+        this.message =
+          "Sorry, this location isn't specific enough to be added to our database."
+        this.previewVisible = false
+        this.formVisible = true
+        this.messageVisible = true
       }
     },
     async postLocation() {
       try {
-        await axios.post(
-          'https://gentle-lake-28954.herokuapp.com/api/locations',
-          {
-            name: this.name,
-            street: this.street_number + ' ' + this.route,
-            city: this.city,
-            state: this.state,
-            zip: this.zip,
-            type: this.locationType,
-            googlePlaceId: this.googlePlaceId,
-            loc: this.loc,
-          }
-        )
-        this.message =
-          'Location added succesfully! Thanks for your contribution.'
-        this.previewVisible = false
-        this.formVisible = false
-        this.messageVisible = true
+        if (
+          this.name &&
+          this.street_number &&
+          this.city &&
+          this.state &&
+          this.zip
+        ) {
+          await axios.post(
+            'https://gentle-lake-28954.herokuapp.com/api/locations',
+            {
+              name: this.name,
+              street: this.street_number + ' ' + this.route,
+              city: this.city,
+              state: this.state,
+              zip: this.zip,
+              type: this.locationType,
+              googlePlaceId: this.googlePlaceId,
+              loc: this.loc,
+            }
+          )
+          this.message =
+            'Location added succesfully! Thanks for your contribution.'
+          this.previewVisible = false
+          this.formVisible = false
+          this.messageVisible = true
+        } else {
+          this.message =
+            "Sorry, this location isn't specific enough to be added to our database."
+          this.previewVisible = false
+          this.formVisible = true
+          this.messageVisible = true
+        }
       } catch (err) {
         this.message = `Sorry, ${err.response.data.message}.`
         this.previewVisible = false
@@ -175,7 +198,8 @@ export default {
         visible:
           this.message ===
           'Location added succesfully! Thanks for your contribution.',
-        hidden: this.message !==
+        hidden:
+          this.message !==
           'Location added succesfully! Thanks for your contribution.',
       }
     },
@@ -242,7 +266,7 @@ input:focus {
 
 /* Button */
 #preview button,
-button.visible  {
+button.visible {
   border-radius: 25px;
   font-size: 20px;
   padding: 10px 20px;

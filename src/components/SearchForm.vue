@@ -149,13 +149,26 @@ button:active {
 
 @media only screen and (max-width: $small) {
   #search-form {
-    margin-right: 30%;
+    margin: 35px 0 45px 0;
+    width: 85%;
+    display: flex;
+    flex-direction: column;
   }
+
   input {
-    width: 200px;
+    border-radius: 25px;
+    width: 100%;
+  }
+
+  button {
+    border-radius: 25px;
+    left: 40%;
+    top: 80%;
+
   }
   label {
     font-size: 12px;
+    width: 100%;
   }
 }
 </style>
