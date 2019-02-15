@@ -164,7 +164,6 @@ button:active {
     border-radius: 25px;
     left: 40%;
     top: 80%;
-
   }
   label {
     font-size: 12px;

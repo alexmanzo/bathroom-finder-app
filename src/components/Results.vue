@@ -62,6 +62,10 @@ export default {
   },
   mounted() {
     this.getBathroomsFromUserLocation()
+    this.$root.$on('Reset Page', () => {
+      this.results = []
+      this.getBathroomsFromUserLocation()
+    })
   },
 }
 </script>
