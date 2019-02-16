@@ -10,6 +10,7 @@
     <div id="message" :class="showMessage">
       <p>{{message}}</p>
       <button @click.prevent="resetForm" :class="showAddAnother">Add another?</button>
+      <button @click.prevent="resetForm" :class="showStartOver">Start Over</button>
     </div>
     <div :class="showPreview" id="preview">
       <h2>Does this look right?</h2>
@@ -21,6 +22,7 @@
         <p>{{ city }}, {{state}} {{zip}}</p>
       </div>
       <button @click.prevent="postLocation">Submit Location</button>
+      <button @click.prevent="resetForm">Start Over</button>
     </div>
   </div>
 </template>
@@ -99,8 +101,13 @@ export default {
       if (this.autocomplete === '') {
         this.message = `Please enter the location you'd like to add.`
         this.messageVisible = true
+      } else if (this.route === '' || this.street_number === ''){
+        this.message = `Sorry, we require more specific information to add a location`
+        this.messageVisible = true
+        this.formVisible = false
       } else {
         this.previewVisible = true
+        this.formVisible = false
         this.autocomplete = ''
       }
     },
@@ -179,6 +186,12 @@ export default {
           'Location added succesfully! Thanks for your contribution.',
       }
     },
+    showStartOver() {
+      return {
+        visible: this.message === `Sorry, we require more specific information to add a location`,
+        hidden: this.message !== `Sorry, we require more specific information to add a location`,
+      }
+    }
   },
   mounted() {
     this.generateAutocomplete()
@@ -239,6 +252,8 @@ button.visible {
   background-color: $orange;
   color: white;
   border: 1px solid $orange;
+  display: flex;
+  margin: 25px auto;
 }
 #autocomplete-form button {
   font-size: 20px;
