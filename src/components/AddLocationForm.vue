@@ -67,7 +67,6 @@ export default {
       ])
       autocompleteSearchBox.addListener('place_changed', () => {
         let place = autocompleteSearchBox.getPlace()
-
         this.name = place.name
         this.loc.coordinates = [
           place.geometry.location.lng(),
@@ -100,54 +99,31 @@ export default {
       if (this.autocomplete === '') {
         this.message = `Please enter the location you'd like to add.`
         this.messageVisible = true
-      } else if (
-        !this.name ||
-        !this.street_number ||
-        !this.city ||
-        !this.state ||
-        !this.zip
-      ) {
-        this.message =
-          "Sorry, this location isn't specific enough to be added to our database."
-        this.previewVisible = false
-        this.formVisible = true
-        this.messageVisible = true
+      } else {
+        this.previewVisible = true
+        this.autocomplete = ''
       }
     },
     async postLocation() {
       try {
-        if (
-          this.name &&
-          this.street_number &&
-          this.city &&
-          this.state &&
-          this.zip
-        ) {
-          await axios.post(
-            'https://gentle-lake-28954.herokuapp.com/api/locations',
-            {
-              name: this.name,
-              street: this.street_number + ' ' + this.route,
-              city: this.city,
-              state: this.state,
-              zip: this.zip,
-              type: this.locationType,
-              googlePlaceId: this.googlePlaceId,
-              loc: this.loc,
-            }
-          )
-          this.message =
-            'Location added succesfully! Thanks for your contribution.'
-          this.previewVisible = false
-          this.formVisible = false
-          this.messageVisible = true
-        } else {
-          this.message =
-            "Sorry, this location isn't specific enough to be added to our database."
-          this.previewVisible = false
-          this.formVisible = true
-          this.messageVisible = true
-        }
+        await axios.post(
+          'https://gentle-lake-28954.herokuapp.com/api/locations',
+          {
+            name: this.name,
+            street: this.street_number + ' ' + this.route,
+            city: this.city,
+            state: this.state,
+            zip: this.zip,
+            type: this.locationType,
+            googlePlaceId: this.googlePlaceId,
+            loc: this.loc,
+          }
+        )
+        this.message =
+          'Location added succesfully! Thanks for your contribution.'
+        this.previewVisible = false
+        this.formVisible = false
+        this.messageVisible = true
       } catch (err) {
         this.message = `Sorry, ${err.response.data.message}.`
         this.previewVisible = false
@@ -212,45 +188,37 @@ export default {
 
 <style lang="scss" scoped>
 @import 'main.scss';
-
 h2 {
   font-size: 32px;
 }
-
 #preview.hidden,
 #autocomplete-form.hidden,
 #message.hidden,
 button.hidden {
   display: none;
 }
-
 #preview.visible,
 #autocomplete-form.visible,
 #message.visible {
   display: block;
 }
-
 #add-new-location {
   position: relative;
   margin: 45px auto;
   text-align: center;
 }
-
 #preview {
   margin-top: 50px;
   position: relative;
 }
-
 #autocomplete-form fieldset {
   margin-right: 70px;
   border: none;
 }
-
 #preview p,
 #message p {
   font-size: 22px;
 }
-
 input {
   font-size: 20px;
   color: $font-color;
@@ -259,11 +227,9 @@ input {
   border-radius: 25px 0 0 25px;
   border: 1px solid $orange;
 }
-
 input:focus {
   outline: none;
 }
-
 /* Button */
 #preview button,
 button.visible {
@@ -274,7 +240,6 @@ button.visible {
   color: white;
   border: 1px solid $orange;
 }
-
 #autocomplete-form button {
   font-size: 20px;
   position: absolute;
@@ -285,7 +250,6 @@ button.visible {
   border: 1px solid $orange;
   margin-right: 65px;
 }
-
 #preview button:focus,
 #autocomplete-form button:focus,
 #message.visible button:focus {
@@ -294,7 +258,6 @@ button.visible {
   border: 1px solid $orange;
   color: $orange;
 }
-
 #autocomplete-form button:hover,
 #preview button:hover,
 #message.visible button:hover {
@@ -303,27 +266,23 @@ button.visible {
   color: $orange;
   cursor: pointer;
 }
-
 #autocomplete-form button:active,
 #preview button:active,
 #message.visible button:active {
   background-color: white;
   color: $orange;
 }
-
 /* Media Queries */
 @media only screen and (max-width: $large) {
   input {
     width: 500px;
   }
 }
-
 @media only screen and (max-width: $medium) {
   input {
     width: 400px;
   }
 }
-
 @media only screen and (max-width: $small) {
   #search-form {
     margin-right: 30%;
