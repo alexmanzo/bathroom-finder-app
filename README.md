@@ -23,6 +23,7 @@
 <p>This project was created using the following technologies:</p>
 <ul>
 <li>Vue.js</li>
+  <li>Vuex</li>
 <li>Vue Router</li>
 <li>Sass</li>
 <li>Axios</li>
