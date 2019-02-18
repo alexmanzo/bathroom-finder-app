@@ -12,14 +12,18 @@
 
 <script>
 import Nav from '@/components/Nav.vue'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     'app-nav': Nav,
   },
   methods: {
+    ...mapActions({
+      resetPage: 'resetPage',
+    }),
     handleClick() {
-      this.$eventBus.$emit('Reset Page')
+      this.resetPage()
     },
   },
 }

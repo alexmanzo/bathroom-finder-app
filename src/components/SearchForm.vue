@@ -31,17 +31,21 @@ export default {
           this.locationInformation.name
         }`
         try {
-          const locationData = await axios({
+          const { data } = await axios({
             url,
             method: 'get',
           })
-          if (locationData.data.length === 0) {
+
+          if (data.length === 0) {
             throw 'no results found'
           }
-          this.setResults(locationData)
+          this.setResults(data)
           this.setLoading(false)
         } catch (err) {
-          this.setMessage(`Sorry, ${err}. Try another search.`)
+          this.setMessage(
+            `Sorry, ${err}. Try another search, or check below for locations we found near you.`
+          )
+          this.setLoading(false)
         }
       } else {
         this.setMessage(`Please enter a search term.`)

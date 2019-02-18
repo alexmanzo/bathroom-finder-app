@@ -8,6 +8,10 @@ const state = {
   message: '',
   results: [],
   loading: false,
+  userLocation: {
+    lng: null,
+    lat: null,
+  },
 }
 
 const actions = {
@@ -28,6 +32,10 @@ const actions = {
     context.commit('setMessage', '')
     context.commit('setResults', [])
     context.commit('setLocationInformation', {})
+    context.commit('setLoading', true)
+  },
+  setUserLocation(context, coords) {
+    context.commit('setUserLocation', coords)
   },
 }
 
@@ -36,6 +44,7 @@ const mutations = {
   setMessage: (state, message) => (state.message = message),
   setResults: (state, results) => (state.results = results),
   setLoading: (state, boolean) => (state.loading = boolean),
+  setUserLocation: (state, coords) => (state.userLocation = coords),
 }
 
 const getters = {
@@ -43,6 +52,7 @@ const getters = {
   resultsInformation: state => state.results,
   message: state => state.message,
   loading: state => state.loading,
+  userLocation: state => state.userLocation,
 }
 
 export default new Vuex.Store({

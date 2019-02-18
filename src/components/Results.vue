@@ -2,12 +2,12 @@
   <div id="results">
     <button
       v-if="locationPermissions === 'prompt'"
-      @click.prevent="getBathroomsFromUserLocation"
+      @click.prevent="getUserLocation"
     >Enable my Location</button>
     <loading v-if="this.loading"></loading>
     <div
       v-else
-      v-for="location in resultsInformation.data"
+      v-for="location in resultsInformation"
       :key="location.id"
       class="location-container"
     >
@@ -40,13 +40,13 @@ export default {
       setResults: 'setResults',
       setMessage: 'setMessage',
       setLoading: 'setLoading',
+      setUserLocation: 'setUserLocation',
     }),
     checkPermissions() {
       navigator.permissions.query({ name: 'geolocation' }).then(result => {
         let permissions = result.state
-
         if (permissions === 'granted') {
-          this.getBathroomsFromUserLocation()
+          this.getUserLocation()
         }
         if (permissions === 'prompt') {
           this.locationPermissions = 'prompt'
@@ -61,23 +61,14 @@ export default {
         }
       })
     },
-    async getBathroomsFromUserLocation() {
-      this.setLoading(true)
-      this.locationPermissions = ''
-      this.setMessage('')
-
-      await navigator.geolocation.getCurrentPosition(
+    getUserLocation() {
+      navigator.geolocation.getCurrentPosition(
         location => {
-          axios
-            .get(
-              `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${
-                location.coords.latitude
-              }&lng=${location.coords.longitude}`
-            )
-            .then(results => {
-              this.setResults(results)
-              this.setLoading(false)
-            })
+          this.setUserLocation({
+            lng: location.coords.longitude,
+            lat: location.coords.latitude,
+          })
+          this.getBathroomsFromUserLocation()
         },
         err => {
           this.setLoading(false)
@@ -88,28 +79,38 @@ export default {
         { timeout: 10000 }
       )
     },
+    async getBathroomsFromUserLocation() {
+      this.setLoading(true)
+      this.locationPermissions = ''
+      this.setMessage('')
+
+      let { data } = await axios
+        .get(
+          `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${
+            this.userLocation.lat
+          }&lng=${this.userLocation.lng}`
+        )
+        .catch(err => {
+          this.setMessage(`Sorry, something went wrong. The error was: ${err}`)
+        })
+      this.setResults(data)
+      this.setLoading(false)
+    },
   },
   computed: {
-    ...mapGetters(['resultsInformation', 'loading']),
-  },
-  created() {
-    this.$eventBus.$on('triggerSearch', () => {
-      this.results = []
-      this.loading = true
-    })
-    this.$eventBus.$on('searchSubmitted', bathroomLocationData => {
-      this.loading = false
-      this.results = bathroomLocationData.data
-    })
-    this.$eventBus.$on('searchError', () => {
-      this.loading = false
-      this.results = []
-    })
+    ...mapGetters(['resultsInformation', 'loading', 'userLocation']),
   },
   mounted() {
     this.checkPermissions()
-    this.$eventBus.$on('Reset Page', () => {
-      this.getBathroomsFromUserLocation()
+  },
+  created() {
+    this.$store.subscribe((mutation, state) => {
+      if (
+        mutation.type === 'setLocationInformation' &&
+        state.results.length === 0
+      ) {
+        this.checkPermissions()
+      }
     })
   },
 }
