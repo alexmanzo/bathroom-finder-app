@@ -6,27 +6,55 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import AutocompleteSearch from '@/components/AutocompleteSearch.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
     'autocomplete-form': AutocompleteSearch,
   },
   data() {
-    return {
-      message: '',
-    }
+    return {}
   },
-  methods: {},
+  methods: {
+    ...mapActions({
+      setLoading: 'setLoading',
+      setResults: 'setResults',
+      setMessage: 'setMessage',
+    }),
+    async getSearchResults() {
+      this.setLoading(true)
+      this.setMessage('')
+      if (this.locationInformation.name) {
+        const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
+          this.locationInformation.name
+        }`
+        try {
+          const locationData = await axios({
+            url,
+            method: 'get',
+          })
+          if (locationData.data.length === 0) {
+            throw 'no results found'
+          }
+          this.setResults(locationData)
+          this.setLoading(false)
+        } catch (err) {
+          this.setMessage(`Sorry, ${err}. Try another search.`)
+        }
+      } else {
+        this.setMessage(`Please enter a search term.`)
+      }
+    },
+  },
   computed: {
-    ...mapGetters(['locationInformation']),
+    ...mapGetters(['locationInformation', 'message']),
   },
   mounted() {
-    // this.$eventBus.$on('triggerSearch', place => {
-    //   this.handleSearch(place)
-    // })
+    this.$eventBus.$on('searchForLocations', () => {
+      this.getSearchResults()
+    })
   },
 }
 </script>
@@ -37,6 +65,10 @@ export default {
 #search-form {
   position: relative;
   margin: 3% 8% 2% 0;
+  text-align: center;
+}
+
+p {
   text-align: center;
 }
 

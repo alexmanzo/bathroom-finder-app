@@ -20,7 +20,6 @@ export default {
   methods: {
     ...mapActions({
       setLocationInformation: 'setLocationInformation',
-      getSearchResults: 'getSearchResults',
     }),
     generateAutocomplete() {
       // Intializes Google's autocomplete functionality on text input.
@@ -42,7 +41,8 @@ export default {
       })
     },
     triggerSearch() {
-      this.page === 'home' ? this.getSearchResults() : null
+      this.page === 'home' ? this.$eventBus.$emit('searchForLocations') : null
+      this.$refs.input.value = ''
     },
   },
   mounted() {
