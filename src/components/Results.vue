@@ -175,4 +175,11 @@ button:active {
     margin: 0 auto;
   }
 }
+
+@media screen and (max-width: $small) {
+  #results {
+    margin-top: 60px;
+    padding-top: 40px;
+  }
+}
 </style>

@@ -141,8 +141,10 @@ button:active {
   button {
     border-radius: 25px;
     left: 40%;
-    top: 80%;
+    top: 80px;
+    margin-bottom: 40px;
   }
+  
   label {
     font-size: 12px;
     width: 100%;

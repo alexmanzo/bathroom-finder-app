@@ -157,8 +157,9 @@ button:active {
   button {
     border-radius: 25px;
     left: 40%;
-    top: 80%;
+    top: 12vh;
   }
+
   label {
     font-size: 12px;
     width: 100%;
