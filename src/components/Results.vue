@@ -101,7 +101,11 @@ export default {
     ...mapGetters(['resultsInformation', 'loading', 'userLocation']),
   },
   mounted() {
-    this.checkPermissions()
+    if (navigator.permissions.query({ name: 'geolocation' }, null)) {
+      this.checkPermissions()
+    } else {
+      this.getUserLocation()
+    }
   },
   created() {
     this.$store.subscribe((mutation, state) => {
