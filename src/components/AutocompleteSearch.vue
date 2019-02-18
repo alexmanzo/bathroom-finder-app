@@ -1,32 +1,52 @@
 <template>
-  <div>
-    <autocomplete-form label="Enter your search for an affirming space" :page="'home'"></autocomplete-form>
+  <form id="search-form" @submit.prevent="triggerSearch" page>
+    <label for="userInput" v-if="label">{{ label }}</label>
+    <input type="text" name="userInput" ref="input" placeholder="Durham, NC 27712">
+    <button>Search</button>
     <p v-if="message !== ''">{{ message }}</p>
-  </div>
+  </form>
 </template>
 
 <script>
-//import axios from 'axios'
-import AutocompleteSearch from '@/components/AutocompleteSearch.vue'
-import { mapGetters } from 'vuex'
-
+import { mapActions } from 'vuex'
 export default {
-  components: {
-    'autocomplete-form': AutocompleteSearch,
-  },
+  props: ['label', 'page'],
   data() {
     return {
+      place: {},
       message: '',
     }
   },
-  methods: {},
-  computed: {
-    ...mapGetters(['locationInformation']),
+  methods: {
+    ...mapActions({
+      setLocationInformation: 'setLocationInformation',
+      getSearchResults: 'getSearchResults',
+    }),
+    generateAutocomplete() {
+      // Intializes Google's autocomplete functionality on text input.
+      const autocompleteSearchBox = new google.maps.places.Autocomplete(
+        this.$refs.input
+      )
+      autocompleteSearchBox.setFields([
+        'place_id',
+        'address_components',
+        'geometry',
+        'name',
+        'types',
+        'vicinity',
+      ])
+      // When a user selects a place from the list, it fires a 'place_changed' event. This adds a listener for that.
+      autocompleteSearchBox.addListener('place_changed', () => {
+        const place = autocompleteSearchBox.getPlace()
+        this.setLocationInformation(place)
+      })
+    },
+    triggerSearch() {
+      this.page === 'home' ? this.getSearchResults() : null
+    },
   },
   mounted() {
-    // this.$eventBus.$on('triggerSearch', place => {
-    //   this.handleSearch(place)
-    // })
+    this.generateAutocomplete()
   },
 }
 </script>

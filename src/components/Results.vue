@@ -1,7 +1,7 @@
 <template>
   <div id="results">
     <loading v-if="this.loading"></loading>
-    <div v-else v-for="location in results" :key="location.id" class="location-container">
+    <div v-else v-for="location in resultsInformation.data" :key="location.id" class="location-container">
       <div class="location-container--info">
         <h2>{{ location.name }}</h2>
         <p>{{ location.street }} {{ location.city }}, {{ location.state }}</p>
@@ -16,20 +16,21 @@
 
 <script>
 import axios from 'axios'
-import Loading from '@/components/Loading.vue'
+import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
-  components: {
-    loading: Loading,
-  },
   data() {
     return {
-      results: [],
       loading: false,
     }
   },
   props: {},
   methods: {
+    ...mapActions({
+      setLocationInformation: 'setLocationInformation',
+      setResults: 'setResults',
+    }),
     async getBathroomsFromUserLocation() {
       this.loading = true
       await navigator.geolocation.getCurrentPosition(location => {
@@ -40,29 +41,32 @@ export default {
             }&lng=${location.coords.longitude}`
           )
           .then(results => {
-            this.results = results.data
+            this.setResults(results)
             this.loading = false
           })
       })
     },
   },
+  computed: {
+    ...mapGetters(['resultsInformation']),
+  },
   created() {
-    this.$root.$on('triggerSearch', () => {
+    this.$eventBus.$on('triggerSearch', () => {
       this.results = []
       this.loading = true
     })
-    this.$root.$on('searchSubmitted', bathroomLocationData => {
+    this.$eventBus.$on('searchSubmitted', bathroomLocationData => {
       this.loading = false
       this.results = bathroomLocationData.data
     })
-    this.$root.$on('searchError', () => {
+    this.$eventBus.$on('searchError', () => {
       this.loading = false
       this.results = []
     })
   },
   mounted() {
     this.getBathroomsFromUserLocation()
-    this.$root.$on('Reset Page', () => {
+    this.$eventBus.$on('Reset Page', () => {
       this.results = []
       this.getBathroomsFromUserLocation()
     })

@@ -4,7 +4,7 @@
       <i class="fas fa-transgender-alt" @click="handleClick"></i>
     </router-link>
     <router-link :to="{ name: 'home' }">
-      <h1>All-Gender Bathroom Finder</h1>
+      <h1 @click="handleClick">All-Gender Bathroom Finder</h1>
     </router-link>
     <app-nav></app-nav>
   </header>
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$root.$emit('Reset Page')
+      this.$eventBus.$emit('Reset Page')
     },
   },
 }

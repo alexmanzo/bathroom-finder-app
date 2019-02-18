@@ -1,12 +1,7 @@
 <template>
   <div id="add-new-location" @submit.prevent="searchLocation">
-    <form id="autocomplete-form" :class="showForm">
-      <h2>First, let's search for the location you'd like to add:</h2>
-      <fieldset>
-        <input type="text" name="userInput" ref="autocomplete" v-model="autocomplete">
-        <button type="submit">Search</button>
-      </fieldset>
-    </form>
+    <h2>First, let's search for the location you'd like to add:</h2>
+    <autocomplete-form></autocomplete-form>
     <div id="message" :class="showMessage">
       <p>{{message}}</p>
       <button @click.prevent="resetForm" :class="showAddAnother">Add another?</button>
@@ -16,10 +11,10 @@
       <h2>Does this look right?</h2>
       <div id="place-preview">
         <p>
-          <strong>{{ name }}</strong>
+          <strong>{{ place.name }}</strong>
         </p>
-        <p>{{ street_number }} {{ route }}</p>
-        <p>{{ city }}, {{state}} {{zip}}</p>
+        <p>{{ place.street_number }} {{ place.route }}</p>
+        <p>{{ place.city }}, {{place.state}} {{place.zip}}</p>
       </div>
       <button @click.prevent="postLocation">Submit Location</button>
       <button @click.prevent="resetForm">Start Over</button>
@@ -29,24 +24,28 @@
 
 <script>
 import axios from 'axios'
-import states from '@/states.json'
+import AutocompleteSearch from '@/components/AutocompleteSearch.vue'
+
 export default {
+  components: {
+    'autocomplete-form': AutocompleteSearch,
+  },
   data() {
     return {
-      autocomplete: '',
-      name: '',
-      street_number: '',
-      route: '',
-      city: '',
-      state: '',
-      zip: null,
-      locationType: [],
-      googlePlaceId: '',
-      loc: {
-        type: 'Point',
-        coordinates: [],
+      place: {
+        name: '',
+        street_number: '',
+        route: '',
+        city: '',
+        state: '',
+        zip: '',
+        locationType: [],
+        googlePlaceId: '',
+        loc: {
+          type: 'Point',
+          coordinates: [],
+        },
       },
-      states,
       message: '',
       previewVisible: false,
       formVisible: true,
@@ -54,107 +53,51 @@ export default {
     }
   },
   methods: {
-    generateAutocomplete() {
-      const autocompleteSearchBox = new google.maps.places.Autocomplete(
-        this.$refs.autocomplete
-      )
-      this.input = autocompleteSearchBox
-      autocompleteSearchBox.setFields([
-        'place_id',
-        'address_components',
-        'geometry',
-        'name',
-        'types',
-        'vicinity',
-      ])
-      autocompleteSearchBox.addListener('place_changed', () => {
-        let place = autocompleteSearchBox.getPlace()
-        this.name = place.name
-        this.loc.coordinates = [
-          place.geometry.location.lng(),
-          place.geometry.location.lat(),
-        ]
-        this.googlePlaceId = place.place_id
-        this.locationType = place.types
-        place.address_components.forEach((component, index) => {
-          switch (place.address_components[index].types[0]) {
-            case 'street_number':
-              this.street_number = place.address_components[index].long_name
-              break
-            case 'route':
-              this.route = place.address_components[index].long_name
-              break
-            case 'locality':
-              this.city = place.address_components[index].long_name
-              break
-            case 'postal_code':
-              this.zip = place.address_components[index].long_name
-              break
-            case 'administrative_area_level_1':
-              this.state = place.address_components[index].short_name
-              break
-          }
-        })
-      })
-    },
-    searchLocation() {
-      if (this.autocomplete === '') {
-        this.message = `Please enter the location you'd like to add.`
-        this.messageVisible = true
-      } else if (this.route === '' || this.street_number === ''){
-        this.message = `Sorry, we require more specific information to add a location`
-        this.messageVisible = true
-        this.formVisible = false
-      } else {
-        this.previewVisible = true
-        this.formVisible = false
-        this.autocomplete = ''
-      }
-    },
+    //async searchLocation(place) {
+    // // if (placeInput === undefined) {
+    // //   this.message = `Please enter the location you'd like to add.`
+    // // } else if (placeInput.route === '' || placeInput.street_number === '') {
+    // //   this.message = `Sorry, we require more specific information to add a location`
+    // // } else if (placeInput) {
+    // this.place.name = name
+    // this.place.locationType = types
+    // this.place.googlePlaceId = placeId
+    // //this.place.loc.coordinates = [geometry.]
+    // addressComponents.forEach((component, index) => {
+    //   switch (addressComponents[index].types[0]) {
+    //     case 'street_number':
+    //       this.place.street_number = addressComponents[index].long_name
+    //       break
+    //     case 'route':
+    //       this.place.route = addressComponents[index].long_name
+    //       break
+    //     case 'locality':
+    //       this.place.city = addressComponents[index].long_name
+    //       break
+    //     case 'postal_code':
+    //       this.place.zip = addressComponents[index].long_name
+    //       break
+    //     case 'administrative_area_level_1':
+    //       this.place.state = addressComponents[index].short_name
+    //       break
+    //   }
+    // })
+    // // }
+    //},
     async postLocation() {
       try {
         await axios.post(
           'https://gentle-lake-28954.herokuapp.com/api/locations',
-          {
-            name: this.name,
-            street: this.street_number + ' ' + this.route,
-            city: this.city,
-            state: this.state,
-            zip: this.zip,
-            type: this.locationType,
-            googlePlaceId: this.googlePlaceId,
-            loc: this.loc,
-          }
+          this.place
         )
         this.message =
           'Location added succesfully! Thanks for your contribution.'
-        this.previewVisible = false
-        this.formVisible = false
-        this.messageVisible = true
       } catch (err) {
         this.message = `Sorry, ${err.response.data.message}.`
-        this.previewVisible = false
-        this.formVisible = true
-        this.messageVisible = true
       }
     },
     resetForm() {
-      ;(this.name = ''),
-        (this.street_number = ''),
-        (this.route = ''),
-        (this.city = ''),
-        (this.state = ''),
-        (this.zip = null),
-        (this.locationType = []),
-        (this.googlePlaceId = ''),
-        (this.loc = {
-          type: 'Point',
-          coordinates: [],
-        }),
-        (this.message = ''),
-        (this.previewVisible = false),
-        (this.formVisible = true),
-        (this.messageVisible = false)
+      this.place = {}
     },
   },
   computed: {
@@ -188,13 +131,19 @@ export default {
     },
     showStartOver() {
       return {
-        visible: this.message === `Sorry, we require more specific information to add a location`,
-        hidden: this.message !== `Sorry, we require more specific information to add a location`,
+        visible:
+          this.message ===
+          `Sorry, we require more specific information to add a location`,
+        hidden:
+          this.message !==
+          `Sorry, we require more specific information to add a location`,
       }
-    }
+    },
   },
   mounted() {
-    this.generateAutocomplete()
+    this.$eventBus.$on('triggerSearch', place => {
+      this.searchLocation(place)
+    })
   },
 }
 </script>
