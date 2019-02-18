@@ -70,13 +70,24 @@ export default {
           })
           this.getBathroomsFromUserLocation()
         },
-        err => {
+        error => {
           this.setLoading(false)
-          this.setMessage(
-            `Sorry something went wrong. Try entering a search in the search bar. The error was: ${err.message.toLowerCase()}.`
-          )
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              this.setMessage('User denied the request for Geolocation. Please try searching for a location above.')
+              break
+            case error.POSITION_UNAVAILABLE:
+              this.setMessage('Location information is unavailable. Please try searching for a location above.')
+              break
+            case error.TIMEOUT:
+              this.setMessage('The request to get user location timed out.Please try searching for a location above.')
+              break
+            case error.UNKNOWN_ERROR:
+              this.setMessage('An unknown error occurred trying to get your location. Please try searching for a location above.')
+              break
+          }
         },
-        { timeout: 5000 }
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       )
     },
     async getBathroomsFromUserLocation() {
