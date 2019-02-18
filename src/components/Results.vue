@@ -57,7 +57,7 @@ export default {
             `It looks like you've blocked access to your location, so we can't automatically find bathrooms near you. Feel free to use the search bar above to find a safe space!`
           )
         } else {
-          this.getUserLocation()
+          this.getBathroomsFromUserLocation()
         }
       })
     },
