@@ -47,17 +47,17 @@ export default {
         let permissions = result.state
         if (permissions === 'granted') {
           this.getUserLocation()
-        }
-        if (permissions === 'prompt') {
+        } else if (permissions === 'prompt') {
           this.locationPermissions = 'prompt'
           this.setMessage(
             `Please enable location services to find bathrooms near you!`
           )
-        }
-        if (permissions === 'denied') {
+        } else if (permissions === 'denied') {
           this.setMessage(
             `It looks like you've blocked access to your location, so we can't automatically find bathrooms near you. Feel free to use the search bar above to find a safe space!`
           )
+        } else {
+          this.getUserLocation()
         }
       })
     },
@@ -179,7 +179,7 @@ button:active {
 @media screen and (max-width: $small) {
   #results {
     margin-top: 60px;
-    padding-top: 40px;
+    padding-top: 4px;
   }
 }
 </style>

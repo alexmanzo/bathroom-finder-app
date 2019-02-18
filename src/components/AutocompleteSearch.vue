@@ -144,7 +144,7 @@ button:active {
     top: 80px;
     margin-bottom: 40px;
   }
-  
+
   label {
     font-size: 12px;
     width: 100%;
