@@ -75,6 +75,7 @@ export default {
 @media only screen and (max-width: $small) {
   .spinner {
     width: 100%;
+    margin: 25px auto 0;
   }
 }
 </style>

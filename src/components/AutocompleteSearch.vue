@@ -3,7 +3,7 @@
     <label for="userInput" v-if="label">{{ label }}</label>
     <input type="text" name="userInput" ref="input" placeholder="Durham, NC 27712">
     <button>Search</button>
-    <p v-if="message !== ''">{{ message }}</p>
+    <p v-if="message !== ''" class="message">{{ message }}</p>
   </form>
 </template>
 
@@ -141,8 +141,7 @@ button:active {
   button {
     border-radius: 25px;
     left: 40%;
-    top: 80px;
-    margin-bottom: 40px;
+    top: 55px;
   }
 
   label {

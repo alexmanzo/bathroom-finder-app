@@ -76,7 +76,7 @@ export default {
             `Sorry something went wrong. Try entering a search in the search bar. The error was: ${err.message.toLowerCase()}.`
           )
         },
-        { timeout: 10000 }
+        { timeout: 5000 }
       )
     },
     async getBathroomsFromUserLocation() {
@@ -101,11 +101,7 @@ export default {
     ...mapGetters(['resultsInformation', 'loading', 'userLocation']),
   },
   mounted() {
-    if (navigator.permissions.query({ name: 'geolocation' }, null)) {
-      this.checkPermissions()
-    } else {
-      this.getUserLocation()
-    }
+    this.getUserLocation()
   },
   created() {
     this.$store.subscribe((mutation, state) => {
@@ -182,8 +178,7 @@ button:active {
 
 @media screen and (max-width: $small) {
   #results {
-    margin-top: 60px;
-    padding-top: 4px;
+    padding-top: 75px;
   }
 }
 </style>

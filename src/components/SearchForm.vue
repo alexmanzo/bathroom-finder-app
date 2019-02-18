@@ -143,10 +143,14 @@ button:active {
 
 @media only screen and (max-width: $small) {
   #search-form {
-    margin: 35px 0 45px 0;
+    margin: 35px 0 15px 0;
     width: 85%;
     display: flex;
     flex-direction: column;
+  }
+
+  p {
+    padding: 60px 0 10px 0;
   }
 
   input {
@@ -157,7 +161,7 @@ button:active {
   button {
     border-radius: 25px;
     left: 40%;
-    top: 12vh;
+    top: 10vh;
   }
 
   label {
