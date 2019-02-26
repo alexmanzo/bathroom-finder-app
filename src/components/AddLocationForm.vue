@@ -54,7 +54,7 @@ export default {
     }),
     formatLocation() {
       this.formVisible = false
-      if (this.locationInformation.address_components.length < 5) {
+      if (this.locationInformation.address_components.length < 6) {
         this.setMessage(
           'Sorry, we require more specific information to add a location.'
         )
@@ -112,7 +112,7 @@ export default {
       } catch (err) {
         this.previewVisible = false
         this.startOverVisible = true
-        this.setMessage(`Sorry, ${err.response.data.message}.`)
+        this.setMessage(`Sorry, ${err.response.data.message}`)
       }
     },
     resetForm() {
