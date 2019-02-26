@@ -15,9 +15,9 @@
         <h2>{{ location.name }}</h2>
         <p>{{ location.street }} {{ location.city }}, {{ location.state }}</p>
       </div>
-      <div v-if="location.dist" class="location-container--distance">
+      <div v-if="location.distance" class="location-container--distance">
         <p>Distance</p>
-        <p>{{ (location.dist.calculated / 1609.344).toFixed(1) }} miles</p>
+        <p>{{ (location.distance / 1609.344).toFixed(1) }} miles</p>
       </div>
     </div>
   </div>
