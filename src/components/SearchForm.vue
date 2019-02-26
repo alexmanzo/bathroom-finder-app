@@ -1,6 +1,10 @@
 <template>
   <div>
-    <autocomplete-form label="Enter your search for an affirming space" :page="'home'"></autocomplete-form>
+    <form id="search-form" @submit.prevent="getSearchResults" page>
+      <label for="userInput">Enter your search for an affirming space:</label>
+      <autocomplete-input></autocomplete-input>
+      <button>Search</button>
+    </form>
     <p v-if="message !== ''">{{ message }}</p>
   </div>
 </template>
@@ -12,7 +16,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
-    'autocomplete-form': AutocompleteSearch,
+    'autocomplete-input': AutocompleteSearch,
   },
   data() {
     return {}
@@ -23,9 +27,10 @@ export default {
       setResults: 'setResults',
       setMessage: 'setMessage',
     }),
-    async getSearchResults() {
+    async getSearchResults(event) {
       this.setLoading(true)
       this.setMessage('')
+      event.target.reset()
       if (this.locationInformation.name) {
         const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
           this.locationInformation.name
@@ -54,11 +59,6 @@ export default {
   },
   computed: {
     ...mapGetters(['locationInformation', 'message']),
-  },
-  mounted() {
-    this.$eventBus.$on('searchForLocations', () => {
-      this.getSearchResults()
-    })
   },
 }
 </script>

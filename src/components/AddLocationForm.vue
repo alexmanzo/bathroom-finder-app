@@ -1,10 +1,15 @@
 <template>
   <div id="add-new-location" @submit.prevent="formatLocation">
     <h2>First, let's search for the location you'd like to add:</h2>
-    <autocomplete-form v-if="formVisible"></autocomplete-form>
-    <p>{{message}}</p>
-    <button @click.prevent="resetForm" v-if="addAnotherVisible">Add another?</button>
-    <button @click.prevent="resetForm" v-if="startOverVisible">Start Over</button>
+    <form v-if="formVisible" id="search-form" @submit.prevent="">
+      <autocomplete-input></autocomplete-input>
+      <button class="search-button">Search</button>
+
+    </form>
+
+          <p v-if="message !== ''" class="message">{{ message }}</p>
+    <button @click.prevent="resetForm" v-if="addAnotherVisible" class="nav-button">Add another?</button>
+    <button @click.prevent="resetForm" v-if="startOverVisible" class="nav-button">Start Over</button>
     <div v-if="previewVisible" id="preview">
       <h2>Does this look right?</h2>
       <div id="place-preview">
@@ -14,8 +19,8 @@
         <p>{{ this.street_number }} {{ this.route }}</p>
         <p>{{ this.city }}, {{this.state}} {{this.zip}}</p>
       </div>
-      <button @click.prevent="postLocation">Submit Location</button>
-      <button @click.prevent="resetForm">Start Over</button>
+      <button @click.prevent="postLocation" class="nav-button">Submit Location</button>
+      <button @click.prevent="resetForm" class="nav-button">Start Over</button>
     </div>
   </div>
 </template>
@@ -27,7 +32,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
-    'autocomplete-form': AutocompleteSearch,
+    'autocomplete-input': AutocompleteSearch,
   },
   data() {
     return {
@@ -159,12 +164,40 @@ input {
   width: 600px;
   border-radius: 25px 0 0 25px;
   border: 1px solid $orange;
+  position: relative;
 }
 input:focus {
   outline: none;
 }
 /* Button */
-button {
+.search-button {
+  font-size: 20px;
+  position: absolute;
+  border-radius: 0 25px 25px 0;
+  padding: 10px 20px;
+  background-color: $orange;
+  color: white;
+  border: 1px solid $orange;
+}
+
+.search-button:focus {
+  outline: none;
+  background-color: transparent;
+  border: 1px solid $orange;
+  color: $orange;
+}
+
+.search-button:hover {
+  background-color: transparent;
+  border: 1px solid $orange;
+  color: $orange;
+}
+
+.search-button:active {
+  background-color: white;
+  color: $orange;
+}
+.nav-button {
   border-radius: 25px;
   font-size: 20px;
   padding: 10px 20px;
@@ -175,20 +208,20 @@ button {
   margin: 25px auto;
 }
 
-button:focus {
+.nav-button:focus {
   outline: none;
   background-color: transparent;
   border: 1px solid $orange;
   color: $orange;
 }
-button:hover {
+.nav-button:hover {
   background-color: transparent;
   border: 1px solid $orange;
   color: $orange;
   cursor: pointer;
 }
 
-button:active {
+.nav-button:active {
   background-color: white;
   color: $orange;
 }

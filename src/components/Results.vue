@@ -42,25 +42,25 @@ export default {
       setLoading: 'setLoading',
       setUserLocation: 'setUserLocation',
     }),
-    checkPermissions() {
-      navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        let permissions = result.state
-        if (permissions === 'granted') {
-          this.getUserLocation()
-        } else if (permissions === 'prompt') {
-          this.locationPermissions = 'prompt'
-          this.setMessage(
-            `Please enable location services to find bathrooms near you!`
-          )
-        } else if (permissions === 'denied') {
-          this.setMessage(
-            `It looks like you've blocked access to your location, so we can't automatically find bathrooms near you. Feel free to use the search bar above to find a safe space!`
-          )
-        } else {
-          this.getBathroomsFromUserLocation()
-        }
-      })
-    },
+    // checkPermissions() {
+    //   navigator.permissions.query({ name: 'geolocation' }).then(result => {
+    //     let permissions = result.state
+    //     if (permissions === 'granted') {
+    //       this.getUserLocation()
+    //     } else if (permissions === 'prompt') {
+    //       this.locationPermissions = 'prompt'
+    //       this.setMessage(
+    //         `Please enable location services to find bathrooms near you!`
+    //       )
+    //     } else if (permissions === 'denied') {
+    //       this.setMessage(
+    //         `It looks like you've blocked access to your location, so we can't automatically find bathrooms near you. Feel free to use the search bar above to find a safe space!`
+    //       )
+    //     } else {
+    //       this.getBathroomsFromUserLocation()
+    //     }
+    //   })
+    // },
     getUserLocation() {
       navigator.geolocation.getCurrentPosition(
         location => {
@@ -74,16 +74,24 @@ export default {
           this.setLoading(false)
           switch (error.code) {
             case error.PERMISSION_DENIED:
-              this.setMessage('User denied the request for Geolocation. Please try searching for a location above.')
+              this.setMessage(
+                'User denied the request for Geolocation. Please try searching for a location above.'
+              )
               break
             case error.POSITION_UNAVAILABLE:
-              this.setMessage('Location information is unavailable. Please try searching for a location above.')
+              this.setMessage(
+                'Location information is unavailable. Please try searching for a location above.'
+              )
               break
             case error.TIMEOUT:
-              this.setMessage('The request to get user location timed out.Please try searching for a location above.')
+              this.setMessage(
+                'The request to get user location timed out. Please try searching for a location above.'
+              )
               break
             case error.UNKNOWN_ERROR:
-              this.setMessage('An unknown error occurred trying to get your location. Please try searching for a location above.')
+              this.setMessage(
+                'An unknown error occurred trying to get your location. Please try searching for a location above.'
+              )
               break
           }
         },
@@ -120,7 +128,7 @@ export default {
         mutation.type === 'setLocationInformation' &&
         state.results.length === 0
       ) {
-        this.checkPermissions()
+        this.getUserLocation()
       }
     })
   },

@@ -1,16 +1,10 @@
 <template>
-  <form id="search-form" @submit.prevent="triggerSearch" page>
-    <label for="userInput" v-if="label">{{ label }}</label>
-    <input type="text" name="userInput" ref="input" placeholder="Durham, NC 27712">
-    <button>Search</button>
-    <p v-if="message !== ''" class="message">{{ message }}</p>
-  </form>
+  <input type="text" name="userInput" ref="input" placeholder="Durham, NC 27712">
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 export default {
-  props: ['label', 'page'],
   data() {
     return {
       place: {},
@@ -39,10 +33,6 @@ export default {
         const place = autocompleteSearchBox.getPlace()
         this.setLocationInformation(place)
       })
-    },
-    triggerSearch() {
-      this.page === 'home' ? this.$eventBus.$emit('searchForLocations') : null
-      this.$refs.input.value = ''
     },
   },
   mounted() {
@@ -82,35 +72,6 @@ label {
   padding-left: 25px;
 }
 
-/* Button */
-
-button {
-  font-size: 20px;
-  position: absolute;
-  border-radius: 0 25px 25px 0;
-  padding: 10px 20px;
-  background-color: $orange;
-  color: white;
-  border: 1px solid $orange;
-}
-
-button:focus {
-  outline: none;
-  background-color: transparent;
-  border: 1px solid $orange;
-  color: $orange;
-}
-
-button:hover {
-  background-color: transparent;
-  border: 1px solid $orange;
-  color: $orange;
-}
-
-button:active {
-  background-color: white;
-  color: $orange;
-}
 
 /* Media Queries */
 @media only screen and (max-width: $large) {
