@@ -4,7 +4,7 @@
       v-if="locationPermissions === 'prompt'"
       @click.prevent="getUserLocation"
     >Enable my Location</button>
-    <loading v-if="this.loading"></loading>
+    <loading v-if="loading"></loading>
     <div
       v-else
       v-for="location in resultsInformation"
@@ -62,13 +62,17 @@ export default {
     //   })
     // },
     getUserLocation() {
+      this.setLoading(true)
       navigator.geolocation.getCurrentPosition(
         location => {
           this.setUserLocation({
             lng: location.coords.longitude,
             lat: location.coords.latitude,
           })
-          this.getBathroomsFromUserLocation()
+          this.getBathroomsFromUserLocation(
+            location.coords.longitude,
+            location.coords.latitude
+          )
         },
         error => {
           this.setLoading(false)
@@ -98,16 +102,14 @@ export default {
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       )
     },
-    async getBathroomsFromUserLocation() {
+    async getBathroomsFromUserLocation(lng, lat) {
       this.setLoading(true)
       this.locationPermissions = ''
       this.setMessage('')
 
       let { data } = await axios
         .get(
-          `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${
-            this.userLocation.lat
-          }&lng=${this.userLocation.lng}`
+          `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${lat}&lng=${lng}`
         )
         .catch(err => {
           this.setMessage(`Sorry, something went wrong. The error was: ${err}`)
@@ -123,6 +125,7 @@ export default {
     this.getUserLocation()
   },
   created() {
+    this.getUserLocation()
     this.$store.subscribe((mutation, state) => {
       if (
         mutation.type === 'setLocationInformation' &&
