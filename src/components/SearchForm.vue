@@ -54,6 +54,7 @@ export default {
         }
       } else {
         this.setMessage(`Please enter a search term.`)
+        this.setLoading(false)
       }
     },
   },

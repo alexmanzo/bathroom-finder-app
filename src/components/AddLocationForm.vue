@@ -1,13 +1,11 @@
 <template>
   <div id="add-new-location" @submit.prevent="formatLocation">
     <h2>First, let's search for the location you'd like to add:</h2>
-    <form v-if="formVisible" id="search-form" @submit.prevent="">
+    <form v-if="formVisible" id="search-form" @submit.prevent>
       <autocomplete-input></autocomplete-input>
       <button class="search-button">Search</button>
-
     </form>
-
-          <p v-if="message !== ''" class="message">{{ message }}</p>
+    <p v-if="message !== ''" class="message">{{ message }}</p>
     <button @click.prevent="resetForm" v-if="addAnotherVisible" class="nav-button">Add another?</button>
     <button @click.prevent="resetForm" v-if="startOverVisible" class="nav-button">Start Over</button>
     <div v-if="previewVisible" id="preview">

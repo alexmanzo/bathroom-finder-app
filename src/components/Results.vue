@@ -1,9 +1,9 @@
 <template>
   <div id="results">
-    <button
+    <!-- <button
       v-if="locationPermissions === 'prompt'"
       @click.prevent="getUserLocation"
-    >Enable my Location</button>
+    >Enable my Location</button> -->
     <loading v-if="loading"></loading>
     <div
       v-else
