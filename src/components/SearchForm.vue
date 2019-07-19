@@ -31,29 +31,56 @@ export default {
       this.setLoading(true)
       this.setMessage('')
       event.target.reset()
-      if (this.locationInformation.name) {
-        const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${
-          this.locationInformation.name
-        }`
-        try {
-          const { data } = await axios({
-            url,
-            method: 'get',
-          })
 
-          if (data.length === 0) {
-            throw 'no results found'
-          }
-          this.setResults(data)
-          this.setLoading(false)
-        } catch (err) {
-          this.setMessage(
-            `Sorry, ${err}. Try another search, or check below for locations we found near you.`
-          )
-          this.setLoading(false)
-        }
+      if (this.locationInformation.types[0] === 'locality') {
+        this.getSearchResultsByLocation(
+          this.locationInformation.geometry.location.lng(),
+          this.locationInformation.geometry.location.lat()
+        )
+      } else if (this.locationInformation.name) {
+        this.getSearchResultsByQuery(this.locationInformation.name)
       } else {
         this.setMessage(`Please enter a search term.`)
+        this.setLoading(false)
+      }
+    },
+    async getSearchResultsByQuery(query) {
+      const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${query}`
+      try {
+        const { data } = await axios({
+          url,
+          method: 'get',
+        })
+
+        if (data.length === 0) {
+          throw 'no results found'
+        }
+        this.setResults(data)
+        this.setLoading(false)
+      } catch (err) {
+        this.setMessage(
+          `Sorry, ${err}. Try another search, or check below for locations we found near you.`
+        )
+        this.setLoading(false)
+      }
+    },
+    async getSearchResultsByLocation(lng, lat) {
+      const url = `https://gentle-lake-28954.herokuapp.com/api/locations/geography?lat=${lat}&lng=${lng}`
+      try {
+        const { data } = await axios({
+          url,
+          method: 'get',
+        })
+
+        if (data.length === 0) {
+          throw 'no results found'
+        }
+        this.setResults(data)
+        this.setLoading(false)
+      } catch (err) {
+        this.setMessage(
+          `Sorry, ${err}. Try another search, or check below for locations we found near you.`
+        )
         this.setLoading(false)
       }
     },
