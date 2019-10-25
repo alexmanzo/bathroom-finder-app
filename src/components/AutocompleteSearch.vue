@@ -1,5 +1,5 @@
 <template>
-  <input type="text" name="userInput" ref="input" placeholder="Durham, NC 27712">
+  <input type="text" name="userInput" ref="input" v-model="query" placeholder="Durham, NC 27712" />
 </template>
 
 <script>
@@ -8,6 +8,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      query: ''
     }
   },
   methods: {
@@ -30,6 +31,7 @@ export default {
       // When a user selects a place from the list, it fires a 'place_changed' event. This adds a listener for that.
       autocompleteSearchBox.addListener('place_changed', () => {
         const place = autocompleteSearchBox.getPlace()
+        this.query = this.$refs.input.value
         this.setLocationInformation(place)
       })
     },
@@ -70,7 +72,6 @@ label {
   top: -20px;
   padding-left: 25px;
 }
-
 
 /* Media Queries */
 @media only screen and (max-width: $large) {

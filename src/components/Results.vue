@@ -121,19 +121,9 @@ export default {
   computed: {
     ...mapGetters(['resultsInformation', 'loading', 'userLocation']),
   },
-  mounted() {
-    this.getUserLocation()
-  },
   created() {
     this.getUserLocation()
-    this.$store.subscribe((mutation, state) => {
-      if (
-        mutation.type === 'setLocationInformation' &&
-        state.results.length === 0
-      ) {
-        this.getUserLocation()
-      }
-    })
+    
   },
 }
 </script>

@@ -19,7 +19,9 @@ export default {
     'autocomplete-input': AutocompleteSearch,
   },
   data() {
-    return {}
+    return {
+      query: ''
+    }
   },
   methods: {
     ...mapActions({
@@ -30,7 +32,15 @@ export default {
     async getSearchResults(event) {
       this.setLoading(true)
       this.setMessage('')
+
       event.target.reset()
+
+      if (!this.locationInformation.types) {
+        this.setLoading(false)
+        this.setResults([])
+        this.setMessage('Please enter a search term.')
+        return
+      }
 
       if (this.locationInformation.types[0] === 'locality') {
         this.getSearchResultsByLocation(
@@ -45,7 +55,9 @@ export default {
       }
     },
     async getSearchResultsByQuery(query) {
-      const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${query}`
+      const formattedQuery = query.split(' ')[0]
+      const url = `https://gentle-lake-28954.herokuapp.com/api/locations/search?searchTerm=${formattedQuery}`
+
       try {
         const { data } = await axios({
           url,
