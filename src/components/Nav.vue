@@ -1,6 +1,7 @@
 <template>
   <nav>
-    <router-link :to="{ name: 'addNew' }"><button>+ Add New</button></router-link>
+    <a href="/add-new">+ Add New</a>
+    <a href="/login">Login</a>
   </nav>
 </template>
 
@@ -18,7 +19,7 @@ export default {
 <style scoped lang="scss">
 @import 'main.scss';
 
-button {
+a {
   font-size: 16px;
   padding: 8px 14px;
   background-color: $orange;
@@ -26,18 +27,23 @@ button {
   font-weight: bold;
   border-radius: 25px;
   border: 1px solid white;
+  text-decoration: none;
 }
 
-button:hover {
+a:hover {
   background-color: transparent;
   color: $orange;
   border: 1px solid $orange;
   cursor: pointer;
 }
 
-button:focus {
+a:focus {
   background-color: transparent;
   color: $orange;
   border: 1px solid $orange;
+}
+
+a + a {
+  margin-left: 25px;
 }
 </style>
