@@ -164,9 +164,7 @@ input {
   border: 1px solid $orange;
   position: relative;
 }
-input:focus {
-  outline: none;
-}
+
 /* Button */
 .search-button {
   font-size: 20px;
